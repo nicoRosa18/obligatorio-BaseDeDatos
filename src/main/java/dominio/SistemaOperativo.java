@@ -335,7 +335,7 @@ public class SistemaOperativo extends Observable {
             this.ProgramasActivos.add(prog);
             p.escribir(prog.nombreP + " agregado");
             }
-        }repo
+        }
     }
 
 }

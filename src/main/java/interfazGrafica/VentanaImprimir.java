@@ -97,7 +97,7 @@ public class VentanaImprimir extends javax.swing.JFrame  implements Observer{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImprimirActionPerformed
-     modelo.iniciarProceso("imprimir",jTextAreaTextoaImpirimir.getText());
+  //   modelo.iniciarPrograma("imprimir",jTextAreaTextoaImpirimir.getText());
      
     }//GEN-LAST:event_jButtonImprimirActionPerformed
 

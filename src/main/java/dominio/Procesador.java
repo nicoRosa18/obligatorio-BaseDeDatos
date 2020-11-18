@@ -9,10 +9,18 @@ public class Procesador  extends Recurso{
 
     int capacidadMaxProcesos;
     int procesosActuales;
+    int quantum;
     Procesador(){
         nombreRec="procesador";
-        capacidadMaxProcesos=4;
+        capacidadMaxProcesos=2;
         procesosActuales=0;
-    }   
+        quantum=4;
+    }  
+    
+    
+    public int procesosActuales(){
+        return this.procesosActuales;
+    }
+    
     
 }

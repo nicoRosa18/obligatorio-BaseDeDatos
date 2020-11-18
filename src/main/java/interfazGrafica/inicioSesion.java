@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  * @author nicol
  */
 
-public class inicioSesion extends javax.swing.JFrame {
+public class inicioSesion extends javax.swing.JFrame implements Runnable {
 
     private SistemaOperativo sis;
     
@@ -283,4 +283,9 @@ public class inicioSesion extends javax.swing.JFrame {
     private javax.swing.JLabel textPasw;
     private javax.swing.JTextField txtpasword;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void run() {
+    this.setVisible(true);
+    }
 }

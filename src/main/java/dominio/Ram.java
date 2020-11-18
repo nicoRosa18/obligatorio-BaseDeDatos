@@ -10,7 +10,7 @@ public class Ram extends Recurso{
     
     Ram(){
         nombreRec= "Ram";
-         capacidad=8000;
+         capacidad=1000;
          enUso=0;
     }
 }

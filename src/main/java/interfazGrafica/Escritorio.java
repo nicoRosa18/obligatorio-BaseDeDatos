@@ -5,6 +5,7 @@
  */
 package interfazGrafica;
 
+import dominio.Programa;
 import dominio.SistemaOperativo;
 import java.awt.Button;
 import java.awt.GridLayout;
@@ -17,23 +18,21 @@ import javax.swing.JButton;
 
 public abstract class Escritorio extends javax.swing.JFrame implements Observer {
 
-     private JButton[][] botones;
-     private javax.swing.JPanel panelMatriz;
-     private SistemaOperativo modelo;
-     String user;
-     
+    private JButton[][] botones;
+    private javax.swing.JPanel panelMatriz;
+    private SistemaOperativo modelo;
+    String user;
+
     public Escritorio(SistemaOperativo unSistema, String usuario) {
-        modelo=unSistema;
+        modelo = unSistema;
 //        modelo.addObserver(this);
-        user=usuario;
+        user = usuario;
         initComponents();
         cargarEscritorio();
-      //  panelMatriz = new javax.swing.JPanel();
-        
+        //  panelMatriz = new javax.swing.JPanel();
+
     }
 
-  
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -73,63 +72,65 @@ public abstract class Escritorio extends javax.swing.JFrame implements Observer 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
-  /*  public static void main(String args[]) {
-      
-        
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new escritorio().setVisible(true);
-            }
-        });
-    }*/
-    
     public void cargarEscritorio() {
 
-        int cantidadProcesos = modelo.getCantProcesos(user);
-        
+        int cantidadProcesos = modelo.getCantProgramas(user);
+
         panelMatriz.removeAll();
         // crear botones y agregarlos al panel
-        panelMatriz.setLayout(new GridLayout(cantidadProcesos, 1));
-        botones = new JButton[cantidadProcesos][1];
+        panelMatriz.setLayout(new GridLayout(cantidadProcesos+1, 1));
+        botones = new JButton[cantidadProcesos+1][1];
         for (int i = 0; i < cantidadProcesos; i++) {
             JButton jButton = new JButton();
             jButton.addActionListener(new ListenerBoton(i));
             panelMatriz.add(jButton);
             botones[i][0] = jButton;
-            jButton.setText(modelo.obtenerProcesos(user).get(i).nombreP);
+            jButton.setText(modelo.obtenerProgramas(user).get(i).getNombre());
         }
-      //  panelMatriz.setVisible(true);
-    }
+        JButton jButton = new JButton();
+            jButton.addActionListener(new ListenerBoton(cantidadProcesos));
+            panelMatriz.add(jButton);
+            botones[cantidadProcesos][0] = jButton;
+            jButton.setText("ejecutar Programas agregados");
 
-    
-    private class ListenerBoton implements ActionListener {
         
-        private int x;
+        //  panelMatriz.setVisible(true);
+    }
+    
+
+    public class ListenerBoton implements ActionListener {
+
+        private int x = -1;
 
         public ListenerBoton(int i) {
             // en el constructor se almacena la fila y columna que se presionó
-            x = 0;
- 
+            x = i;
+
         }
+        public int getX(){
+            return this.x;
+        }
+
         @Override
-           public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
             // cuando se presiona un botón, se ejecutará este método
             clickBoton(x);
         }
-    
-
-    private void clickBoton(int fila) {
-        modelo.iniciarVentana(botones[fila][0].getText());
-        
-    }
        
+
+        public void clickBoton(int fila) {
+            Programa prog = modelo.getPrograma(botones[fila][0].getText());//me traigo el programa identigicado por nombre
+         modelo.agregarProgramaActivo(prog);//lo agrego a la lista de programas que quiero ejecutar
+         
+        }
+
         public void update(Observable o, Object arg) {
-        cargarEscritorio();
-    }
+            cargarEscritorio();
+        }
+        
+        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel panelMatriz;
     // End of variables declaration//GEN-END:variables
 }
 }
-
