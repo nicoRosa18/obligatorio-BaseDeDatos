@@ -10,6 +10,8 @@ import java.io.*;
 import java.util.*;
 import interfazGrafica.Escritorio;
 import interfazGrafica.Pantalla;
+import interfazGrafica.VentanaCrearProceso;
+import interfazGrafica.VentanaCrearPrograma;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -40,16 +42,16 @@ public class SistemaOperativo extends Observable {
         p = new Pantalla();
         p.setVisible(true);
         this.procesador = cpu;
- 
+
     }
 
     //funciones para agregar al sistema distintos objetos
     void agregarPrograma(Programa p) {
         this.listaProgramas.add(p);
     }
-    
-    void agergarMemoria(Ram r){
-        this.memoria=r;
+
+    void agergarMemoria(Ram r) {
+        this.memoria = r;
     }
 
     void agregarRecurso(Recurso r) {
@@ -278,7 +280,7 @@ public class SistemaOperativo extends Observable {
         } else {
             System.out.println("ejecutando programa " + prog.nombreP + " proceso " + pro.nombreP);
             p.escribir("ejecutando programa " + prog.nombreP + " proceso" + pro.nombreP);
-              esperar(pro.tiempoEjec);
+            esperar(pro.tiempoEjec);
         }
         this.notifyObservers();
         tiempoF = System.currentTimeMillis();
@@ -319,7 +321,7 @@ public class SistemaOperativo extends Observable {
             acumulado += delta * multiplicador;
         }
         if (programaCompletado) {
-            this.memoria.enUso-=p.usoMemoria;
+            this.memoria.enUso -= p.usoMemoria;
             System.out.println(p.nombreP + " finalizado");
         }
     }
@@ -328,14 +330,56 @@ public class SistemaOperativo extends Observable {
         if (prog == null) {
             ejecutarProgramas();
         } else {
-            if(this.memoria.enUso+prog.usoMemoria>this.memoria.capacidad){
-                JOptionPane.showMessageDialog(null, "Memoria llena , ejecute los programas para liberarla");
-            }else{
-            this.memoria.enUso+=prog.usoMemoria;    
-            this.ProgramasActivos.add(prog);
-            p.escribir(prog.nombreP + " agregado");
+           if (prog.nombreP.equals("Crear Programa")) {
+                VentanaCrearPrograma vent = new VentanaCrearPrograma(this);
+                vent.setVisible(true);
+            } else {
+                if (prog.nombreP.equals("Crear Proceso")) {
+                    VentanaCrearProceso ventP = new VentanaCrearProceso(this);
+                    ventP.setVisible(true);
+                } else {
+                    if (this.memoria.enUso + prog.usoMemoria > this.memoria.capacidad) {
+                        JOptionPane.showMessageDialog(null, "Memoria llena , ejecute los programas para liberarla");
+                    } else {
+                        this.memoria.enUso += prog.usoMemoria;
+                        this.ProgramasActivos.add(prog);
+                        p.escribir(prog.nombreP + " agregado");
+                    }
+                }
             }
         }
     }
 
+        boolean existeProceso
+        (String nombre
+        
+            ){
+        for (int i = 0; i < this.listaProcesos.size(); i++) {
+                if (this.listaProcesos.get(i).nombreP.equals(nombre)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    
+    
+
+    public boolean crearProceso(String nombre, int tiempoEjec, boolean usaImp) {
+        if (!existeProceso(nombre)) {
+            Proceso proces = new Proceso(nombre, tiempoEjec, this, usaImp);
+            this.agregarProceso(proces);
+            return true;
+        }
+        return false;
+    }
+
+    public Proceso getProceso(String nombre) {
+            for(int i=0; i<this.listaProcesos.size();i++){
+                if(this.listaProcesos.get(i).nombreP.equals(nombre)){
+                    return this.listaProcesos.get(i);
+                }
+            }
+            return null;
+    }
+    
 }

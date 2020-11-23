@@ -53,7 +53,12 @@ public class main {
      listaP2.add(a);
      listaP2.add(b);
      listaP2.add(e);
+     ArrayList<Proceso> listaVacia=new ArrayList<>();
      Programa p2= new Programa ("Programa 2",listaP2,"usuario");
+     Programa crearP= new Programa("Crear Programa",listaVacia , "usuario");
+      Programa crearProc= new Programa("Crear Proceso", listaVacia, "superUsuario");
+     sis.agregarPrograma(crearP);
+      sis.agregarPrograma(crearProc);
      //agrego los programas al sistema
      sis.agregarPrograma(p1);
      sis.agregarPrograma(p2);

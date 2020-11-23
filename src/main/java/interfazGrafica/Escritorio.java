@@ -79,7 +79,7 @@ public abstract class Escritorio extends javax.swing.JFrame implements Observer 
         panelMatriz.removeAll();
         // crear botones y agregarlos al panel
         panelMatriz.setLayout(new GridLayout(cantidadProcesos+1, 1));
-        botones = new JButton[cantidadProcesos+1][1];
+        botones = new JButton[cantidadProcesos+3][1];
         for (int i = 0; i < cantidadProcesos; i++) {
             JButton jButton = new JButton();
             jButton.addActionListener(new ListenerBoton(i));
@@ -92,8 +92,6 @@ public abstract class Escritorio extends javax.swing.JFrame implements Observer 
             panelMatriz.add(jButton);
             botones[cantidadProcesos][0] = jButton;
             jButton.setText("ejecutar Programas agregados");
-
-        
         //  panelMatriz.setVisible(true);
     }
     
