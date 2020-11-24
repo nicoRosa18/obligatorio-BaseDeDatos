@@ -196,12 +196,7 @@ public class inicioSesion extends javax.swing.JFrame implements Runnable {
        boolean valido=sis.usuarioValido(txtpasword.getText(),textPasw.getText());
        if(valido){
           this.setVisible(false);
-          Escritorio esc=new Escritorio(sis,textPasw.getText()) {
-              @Override
-              public void update(Observable arg0, Object arg1) {
-                  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-              }
-          };
+          Escritorio esc=new Escritorio(sis,textPasw.getText()) {};
           esc.setVisible(true);
        }else{
            JOptionPane.showMessageDialog(this, "ingrese de nuevo la constrasena", "Error", JOptionPane.ERROR_MESSAGE);

@@ -48,6 +48,8 @@ public class SistemaOperativo extends Observable {
     //funciones para agregar al sistema distintos objetos
     void agregarPrograma(Programa p) {
         this.listaProgramas.add(p);
+        this.setChanged();
+        this.notifyObservers();
     }
 
     void agergarMemoria(Ram r) {
@@ -60,6 +62,8 @@ public class SistemaOperativo extends Observable {
 
     void agregarProceso(Proceso p) {
         listaProcesos.add(p);
+        this.setChanged();
+        this.notifyObservers();
     }
 
     void agregarUsuario(Usuario u) {
@@ -201,9 +205,9 @@ public class SistemaOperativo extends Observable {
     }
 
     //esta funcion sirve para demorar los procesos y hacerlos mas reales
-    public static void esperar(int segundos) {
+    public static void esperar(double segundos) {
         try {
-            Thread.sleep(segundos * 1000);
+            Thread.sleep((long)(segundos * 1000));
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -259,6 +263,7 @@ public class SistemaOperativo extends Observable {
         long delta = 0;
         long acumulado = 0;
         double multiplicador = 0.001;
+        pro.estado="En ejecucion";
         if (pro.impresora) {
             boolean impreso = false;
             Impresora imp = getImpresora();
@@ -281,7 +286,9 @@ public class SistemaOperativo extends Observable {
             System.out.println("ejecutando programa " + prog.nombreP + " proceso " + pro.nombreP);
             p.escribir("ejecutando programa " + prog.nombreP + " proceso" + pro.nombreP);
             esperar(pro.tiempoEjec);
+            
         }
+        pro.estado="Bloqueado";
         this.notifyObservers();
         tiempoF = System.currentTimeMillis();
         delta = (tiempoF - tiempoI);
@@ -290,6 +297,7 @@ public class SistemaOperativo extends Observable {
 
     public void ejecutarProgramas() {
         int i = 0;
+        procesosListos(this.ProgramasActivos);
         while (this.ProgramasActivos.size() > 0) {
             ejecutarPrograma(this.ProgramasActivos.get(i), i);
             if (this.ProgramasActivos.size() > i + 1) {
@@ -300,6 +308,13 @@ public class SistemaOperativo extends Observable {
         }
     }
 
+    private void procesosListos( ArrayList<Programa> programasActivos){
+        for(int i=0;i<programasActivos.size();i++){
+            for(int j=0;j<programasActivos.get(i).listaProcesos.size();j++){
+                programasActivos.get(i).listaProcesos.get(j).estado="Listo";
+            }
+        }
+    }
     private void ejecutarPrograma(Programa p, int lugarEnMemoria) {
         boolean programaCompletado = false;
         long tiempoF = 0;
@@ -321,8 +336,23 @@ public class SistemaOperativo extends Observable {
             acumulado += delta * multiplicador;
         }
         if (programaCompletado) {
-            this.memoria.enUso -= p.usoMemoria;
             System.out.println(p.nombreP + " finalizado");
+            liberarMemoria(p);
+        }
+    }
+    
+    private void liberarMemoria(Programa p){
+        for(int i=p.ubicacion;i<p.usoMemoria;i++){
+            this.memoria.arr[i]=0;
+        }
+        this.memoria.enUso-=p.usoMemoria;
+        reOrdenarMemoria();
+    }
+    
+    private void reOrdenarMemoria(){
+        for(int i=0;i<this.memoria.capacidad;i++){
+           if(i<this.memoria.enUso) this.memoria.arr[i]=1;
+           else this.memoria.arr[i]=0;         
         }
     }
 
@@ -330,7 +360,7 @@ public class SistemaOperativo extends Observable {
         if (prog == null) {
             ejecutarProgramas();
         } else {
-           if (prog.nombreP.equals("Crear Programa")) {
+            if (prog.nombreP.equals("Crear Programa")) {
                 VentanaCrearPrograma vent = new VentanaCrearPrograma(this);
                 vent.setVisible(true);
             } else {
@@ -341,8 +371,12 @@ public class SistemaOperativo extends Observable {
                     if (this.memoria.enUso + prog.usoMemoria > this.memoria.capacidad) {
                         JOptionPane.showMessageDialog(null, "Memoria llena , ejecute los programas para liberarla");
                     } else {
-                        this.memoria.enUso += prog.usoMemoria;
                         this.ProgramasActivos.add(prog);
+                        prog.ubicacion=memoria.enUso;
+                        for(int i=0;i<prog.usoMemoria;i++){
+                           memoria.arr[memoria.enUso]=1;
+                           memoria.enUso++;
+                        }
                         p.escribir(prog.nombreP + " agregado");
                     }
                 }
@@ -350,23 +384,19 @@ public class SistemaOperativo extends Observable {
         }
     }
 
-        boolean existeProceso
-        (String nombre
-        
-            ){
+    boolean existeProceso(String nombre
+    ) {
         for (int i = 0; i < this.listaProcesos.size(); i++) {
-                if (this.listaProcesos.get(i).nombreP.equals(nombre)) {
-                    return true;
-                }
+            if (this.listaProcesos.get(i).nombreP.equals(nombre)) {
+                return true;
             }
-            return false;
         }
-    
-    
+        return false;
+    }
 
-    public boolean crearProceso(String nombre, int tiempoEjec, boolean usaImp) {
+    public boolean crearProceso(String nombre, int memo, boolean usaImp) {
         if (!existeProceso(nombre)) {
-            Proceso proces = new Proceso(nombre, tiempoEjec, this, usaImp);
+            Proceso proces = new Proceso(nombre, memo, this, usaImp);
             this.agregarProceso(proces);
             return true;
         }
@@ -374,12 +404,36 @@ public class SistemaOperativo extends Observable {
     }
 
     public Proceso getProceso(String nombre) {
-            for(int i=0; i<this.listaProcesos.size();i++){
-                if(this.listaProcesos.get(i).nombreP.equals(nombre)){
-                    return this.listaProcesos.get(i);
-                }
+        for (int i = 0; i < this.listaProcesos.size(); i++) {
+            if (this.listaProcesos.get(i).nombreP.equals(nombre)) {
+                return this.listaProcesos.get(i);
             }
-            return null;
+        }
+        return null;
+    }
+
+    public boolean crearPrograma(String nombreP, ArrayList<Proceso> listaP, String tipoU) {
+        boolean retorno = true;
+        if (listaP.size() == 0) {
+            return false;
+        }
+        for (int i = 0; i < this.listaProgramas.size(); i++) {
+            if (this.listaProgramas.get(i).nombreP.equals(nombreP)) {
+                return false;
+            }
+        }
+        Programa p = new Programa(nombreP, listaP, tipoU);
+        this.agregarPrograma(p);
+        return retorno ;
+    }
+
+@Override
+protected synchronized void setChanged(){
+        super.setChanged();
     }
     
+    @Override
+public void notifyObservers(){
+        super.notifyObservers();
+    }
 }

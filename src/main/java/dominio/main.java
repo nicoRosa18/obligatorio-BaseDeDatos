@@ -37,7 +37,7 @@ public class main {
       Proceso b= new Proceso("B",3,sis,true);
       Proceso c= new Proceso("C", 2,sis,false);
       Proceso d= new Proceso("D",3,sis,false);
-      Proceso e= new Proceso("E",2,sis,true);
+      Proceso e= new Proceso("E",5,sis,true);
       //los agrego al sistema, algo asi como un registro de que hace cada instruccion
       sis.agregarProceso(a);
       sis.agregarProceso(b);

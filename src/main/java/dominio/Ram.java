@@ -5,12 +5,14 @@ package dominio;
 public class Ram extends Recurso{
     
     
-  public  int capacidad;
+  public  int[] arr;
+  int capacidad;
   public  int enUso;
     
     Ram(){
         nombreRec= "Ram";
-         capacidad=1000;
+         capacidad=30;
+         arr= new int [30];
          enUso=0;
     }
 }

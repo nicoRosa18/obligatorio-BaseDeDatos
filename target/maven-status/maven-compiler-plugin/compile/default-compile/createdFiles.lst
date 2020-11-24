@@ -2,6 +2,7 @@ dominio\Rom.class
 interfazGrafica\inicioSesion$4.class
 interfazGrafica\inicioSesion$6.class
 interfazGrafica\VentanaImprimir$1.class
+interfazGrafica\VentanaCrearPrograma$4.class
 interfazGrafica\VentanaCrearPrograma$1.class
 interfazGrafica\Pantalla.class
 interfazGrafica\Escritorio.class
@@ -14,6 +15,7 @@ interfazGrafica\inicioSesion$9.class
 interfazGrafica\VentanaCrearProceso$3.class
 interfazGrafica\inicioSesion$1.class
 interfazGrafica\Escritorio$ListenerBoton.class
+interfazGrafica\VentanaCrearPrograma$3.class
 interfazGrafica\VentanaCrearProceso$4.class
 interfazGrafica\VentanaCrearPrograma.class
 dominio\Usuario.class
@@ -23,6 +25,7 @@ interfazGrafica\VentanaImprimir.class
 dominio\main.class
 interfazGrafica\inicioSesion$7.class
 interfazGrafica\inicioSesion$3.class
+interfazGrafica\VentanaCrearPrograma$5.class
 interfazGrafica\VentanaImprimir$2.class
 dominio\Procesador.class
 interfazGrafica\inicioSesion$8.class

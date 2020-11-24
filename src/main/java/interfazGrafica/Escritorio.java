@@ -25,10 +25,12 @@ public abstract class Escritorio extends javax.swing.JFrame implements Observer 
 
     public Escritorio(SistemaOperativo unSistema, String usuario) {
         modelo = unSistema;
+          modelo.addObserver(this);
 //        modelo.addObserver(this);
         user = usuario;
         initComponents();
         cargarEscritorio();
+       
         //  panelMatriz = new javax.swing.JPanel();
 
     }
@@ -122,13 +124,14 @@ public abstract class Escritorio extends javax.swing.JFrame implements Observer 
          
         }
 
-        public void update(Observable o, Object arg) {
-            cargarEscritorio();
-        }
         
         
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel panelMatriz;
     // End of variables declaration//GEN-END:variables
+
 }
+      public void update(Observable o, Object arg) {
+            this.cargarEscritorio();
+        }
 }

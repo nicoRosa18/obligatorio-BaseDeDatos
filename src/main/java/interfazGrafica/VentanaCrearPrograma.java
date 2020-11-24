@@ -8,21 +8,28 @@ package interfazGrafica;
 import dominio.Proceso;
 import dominio.SistemaOperativo;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author nicol
  */
-public class VentanaCrearPrograma extends javax.swing.JFrame {
+public class VentanaCrearPrograma extends javax.swing.JFrame implements Observer {
 
     SistemaOperativo modelo;
     ArrayList<Proceso> listaP;
+    int cantP;
+
     
     public VentanaCrearPrograma(SistemaOperativo sis) {
-        this.modelo=sis;
+        modelo=sis;
         initComponents();
                 cargarProcesos();
+                cargarTipoUs();
         listaP= new ArrayList<>();
+        modelo.addObserver(this);
     }
 
     private VentanaCrearPrograma() {
@@ -42,8 +49,14 @@ public class VentanaCrearPrograma extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jButton2 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jTextNombreP = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
+        jComboTipoUsuario = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jComboProcesos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -58,31 +71,86 @@ public class VentanaCrearPrograma extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
 
+        jButton2.setText("Eliminar ultimo proceso");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Nombre programa:");
+
+        jButton3.setText("Agregar Programa");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jComboTipoUsuario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboTipoUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboTipoUsuarioActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Tipo de usuario");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jComboProcesos, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextNombreP, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jComboProcesos, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel2)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jComboTipoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(118, 118, 118)
+                .addGap(19, 19, 19)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextNombreP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(80, 80, 80)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboProcesos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(43, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(118, Short.MAX_VALUE))
+                .addGap(43, 43, 43)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3)
+                    .addComponent(jComboTipoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         pack();
@@ -91,10 +159,47 @@ public class VentanaCrearPrograma extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
        Proceso p= modelo.getProceso(jComboProcesos.getSelectedItem().toString());
        listaP.add(p);
-      
-      jTextArea1.setText(jTextArea1.getText()+ "/n"+ p.nombreP);
+      jTextArea1.setText(jTextArea1.getText()+ p.nombreP+"\n");
+      cantP++;
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+            listaP.remove(listaP.size()-1);
+            
+            jTextArea1.setText(elimProc(jTextArea1.getText()));
+            cantP--;
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+      String nombrePrograma= jTextNombreP.getText();
+      ArrayList<Proceso> listaProcesos= new ArrayList<>();
+      for(int i=0;i<listaP.size();i++){
+          listaProcesos.add(listaP.get(i));
+      }
+      String tipoUsuario= jComboTipoUsuario.getSelectedItem().toString();
+      if(modelo.crearPrograma(nombrePrograma, listaProcesos,tipoUsuario)){
+          listaP.clear();
+        JOptionPane.showMessageDialog(null, "Programa creado!");
+        jTextArea1.setText("");
+        cantP=0;
+      }else{
+          JOptionPane.showMessageDialog(null, "Ya existe un programa con este nombre", "Programa no creado", JOptionPane.WARNING_MESSAGE);
+      }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jComboTipoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboTipoUsuarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboTipoUsuarioActionPerformed
+
+    
+    private String elimProc(String tiraP){
+           String[] div= tiraP.split("\n", cantP);
+           String ret="";
+           for(int i=0;i<div.length-1;i++){
+               ret+=div[i]+"\n";
+           }
+           return  ret;
+    }
     /**
      * @param args the command line arguments
      */
@@ -103,6 +208,13 @@ public class VentanaCrearPrograma extends javax.swing.JFrame {
         jComboProcesos.removeAllItems();
         for(int i=0;i<modelo.listaProcesos.size();i++){
             jComboProcesos.addItem(modelo.listaProcesos.get(i).nombreP);
+        }
+    }
+    private void cargarTipoUs(){
+        jComboTipoUsuario.removeAllItems();
+        String[] tiposU= {"invitado","usuario","superUsuario"};
+        for(int i=0;i<3;i++){
+            jComboTipoUsuario.addItem(tiposU[i]);
         }
     }
     
@@ -141,8 +253,19 @@ public class VentanaCrearPrograma extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JComboBox<String> jComboProcesos;
+    private javax.swing.JComboBox<String> jComboTipoUsuario;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextNombreP;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update(Observable arg0, Object arg1) {
+        this.cargarProcesos();
+    }
 }

@@ -6,15 +6,20 @@ public class Proceso extends Thread {
     
     
     public String nombreP;
-    int tiempoEjec;
+    double tiempoEjec;
     SistemaOperativo sis;
     boolean impresora;
+    String estado;
+    int lugarEnMemoria;
     
-   Proceso(String n, int time, SistemaOperativo s,boolean usaImp){
+   Proceso(String n, int lugarMemoria, SistemaOperativo s,boolean usaImp){
        this.nombreP=n;
-       this.tiempoEjec=time;
+       this.tiempoEjec=lugarMemoria*1.5;
        this.sis=s;
        this.impresora=usaImp;
+       this.estado="bloqueado";
+       this.lugarEnMemoria=lugarMemoria;
+       
        
    }
 

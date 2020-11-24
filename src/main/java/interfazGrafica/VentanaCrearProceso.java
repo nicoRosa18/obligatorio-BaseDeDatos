@@ -7,13 +7,13 @@ package interfazGrafica;
 
 import dominio.SistemaOperativo;
 import javax.swing.JOptionPane;
-
 /**
  *
  * @author nicol
  */
 public class VentanaCrearProceso extends javax.swing.JFrame {
 
+    
      private SistemaOperativo modelo;
      
     public VentanaCrearProceso(SistemaOperativo unSistema) {
@@ -42,7 +42,7 @@ public class VentanaCrearProceso extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jTextNombreP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -59,7 +59,7 @@ public class VentanaCrearProceso extends javax.swing.JFrame {
 
         jLabel1.setText("Nombre");
 
-        jLabel2.setText("tiempo ejecucion");
+        jLabel2.setText("lugar en memoria");
 
         jLabel3.setText("Crear proceso");
 
@@ -77,15 +77,17 @@ public class VentanaCrearProceso extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jTextNombreP, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(38, 38, 38)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(44, 44, 44)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jTextNombreP, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
                         .addComponent(jTextTiempoEjecucion, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,9 +131,9 @@ public class VentanaCrearProceso extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String nombre= jTextNombreP.getText();
-        int tiempoEjec= Integer.parseInt (jTextTiempoEjecucion.getText());
+        int lugarMemoria= Integer.parseInt (jTextTiempoEjecucion.getText());
         boolean usaImp= jUsaImp.isSelected();
-       if( modelo.crearProceso(nombre,tiempoEjec,usaImp)){
+       if( modelo.crearProceso(nombre,lugarMemoria,usaImp)){
           JOptionPane.showMessageDialog(null, "Proceso creado!");
        }else{
            JOptionPane.showMessageDialog(null, "Ya existe un proceso con este nombre", "Proceso no creado", JOptionPane.WARNING_MESSAGE);
